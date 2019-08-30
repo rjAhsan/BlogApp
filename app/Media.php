@@ -10,7 +10,7 @@ class Media extends Model
 
 
     public function Post(){
-        return $this->belongsToMany('App\Post');
+        return $this->belongsToMany(Post::class);
     }
 
 

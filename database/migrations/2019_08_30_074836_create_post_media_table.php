@@ -13,7 +13,7 @@ class CreatePostMediaTable extends Migration
      */
     public function up()
     {
-        Schema::create('post_media', function (Blueprint $table) {
+        Schema::create('media_post', function (Blueprint $table) {
             $table->Increments('id');
             $table->unsignedInteger('post_id');
             $table->unsignedInteger('media_id');

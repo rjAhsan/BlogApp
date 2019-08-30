@@ -9,13 +9,13 @@ class Post extends Model
     protected $fillable = ['Title','Body'];
 
     public  function User(){
-            return $this->belongsTo('App\User');
+            return $this->belongsTo(User::class);
     }
     public function Catagorie(){
-        return $this->belongsToMany('App\Catagorie');
+        return $this->belongsToMany(Catagorie::class);
     }
 
     public function Media(){
-        return $this->belongsToMany('App\Media');
+        return $this->belongsToMany(Media::class);
     }
 }
