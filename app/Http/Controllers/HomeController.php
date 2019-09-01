@@ -26,7 +26,6 @@ class HomeController extends Controller
 
         $Posts=Post::paginate(10);
         //dd($Post);
-
         return view('home',compact('Posts'));
     }
 }
