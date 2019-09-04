@@ -12,10 +12,10 @@ class Post extends Model
             return $this->belongsTo(User::class);
     }
     public function Catagorie(){
-        return $this->belongsToMany(Catagorie::class);
+        return $this->belongsToMany(Catagorie::class,'catagorie_post');
     }
 
     public function Media(){
-        return $this->belongsToMany(Media::class);
+        return $this->belongsToMany(Media::class,'media_post');
     }
 }

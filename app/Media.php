@@ -10,8 +10,12 @@ class Media extends Model
 
 
     public function Post(){
-        return $this->belongsToMany(Post::class);
+        return $this->belongsToMany(Post::class,'media_post');
     }
 
+    public function getPathAttribute($val){
+        return $val;
+
+    }
 
 }
