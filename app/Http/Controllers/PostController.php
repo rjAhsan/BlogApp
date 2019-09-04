@@ -9,6 +9,7 @@ use App\Media;
 use App\PostCatagorie;
 use App\Catagorie;
 use Auth;
+use Gate;
 class PostController extends Controller
 {
     /**
@@ -209,10 +210,16 @@ class PostController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id ,Post $post)
     {
-        if(Auth::user()->id === Post::find($id)->user_id){
+        //Appply ACL WITH IF_ELSE
+//        if(Auth::user()->id === Post::find($id)->user_id)
 
+        $delposts = Post::findOrFail($id);
+//        dd($delposts);
+
+///Applay ACL With GATES
+         if(Gate::allows('edit-post',$delposts)){
             $delposts = Post::findOrFail($id);
             $delposts->delete();
             $Posts = Post::paginate(10);
