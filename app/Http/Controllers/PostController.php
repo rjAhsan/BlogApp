@@ -119,11 +119,11 @@ class PostController extends Controller
     public function edit($id)
     {
         //dd($id);
-
-         if(Auth::user()->id === Post::find($id)->user_id)
+        $Posts = Post::find($id);
+         if(Auth::user()->id === $Posts->user_id)
          {
 
-        $Posts = Post::find($id);
+
         $catagories = Catagorie::all();
         return view('EditPost', compact('Posts', 'catagories'));
        }
