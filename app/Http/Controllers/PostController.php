@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\PostForm;
+use App\PostMedia;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Media;
+use App\PostCatagorie;
+use App\Catagorie;
+use Auth;
 class PostController extends Controller
 {
     /**
@@ -25,62 +30,176 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostForm $request)
     {
-        //
+        if ($request->hasFile('Path') && $request->Path->isValid()) {
+            $filextension = $request->Path->extension();
+            $filename = time() . "." . $filextension;
+            $request->Path->move(public_path('images'), $filename);
+
+        } else {
+            $filename = 'image-not-found.jpg';
+        }
+
+        $Title = $request->Title;
+        $Body = $request->Body;
+        $Catagorie = $request->Catagorie;
+        $path = $filename;
+        $user_id = Auth::user()->id;
+
+//        $post=Post::create([
+//            'Title'->$Title,
+//            'Body'->$Body,
+//            'user_id'->$user_id
+//        ]);
+
+        $post = new Post;
+        $post->Title = $Title;
+        $post->Body = $Body;
+        $post->user_id = $user_id;
+        $post->save();
+
+        $media = new Media;
+        $media->path = $path;
+        $media->save();
+
+        $post->Media()->sync($media->id);
+        $post->Catagorie()->sync($Catagorie);
+
+//        dd($media->id);
+
+
+//
+//        $postmedia=new PostMedia;
+//        $postmedia->post_id=$post->id;
+//        $postmedia->media_id=$media->id;
+//        $postmedia->save();
+//
+//        $postCatagorie= new PostCatagorie;
+//        $postCatagorie->post_id=$post->id;
+//        $postCatagorie->catagorie_id=$Catagorie;
+//        $postCatagorie->save();
+
+
+        return redirect('home')->with('status', 'Post Added Seccuflly');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $Posts = Post::find($id)->first();
+//        dd($Posts);
+        return view('ShowPost', compact('Posts'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $Posts = Post::find($id)->first();
+        $catagories = Catagorie::all();
+        return view('EditPost', compact('Posts', 'catagories'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostForm $request, $id)
     {
-        //
+        $Posts = Post::findOrFail($id)->first();
+        //dd($Posts);
+
+
+            if ($request->hasFile('Path') && $request->Path->isValid()) {
+                $filextension = $request->Path->extension();
+                $filename = time() . "." . $filextension;
+                $request->Path->move(public_path('images'), $filename);
+
+            } else {
+                $filename = 'image-not-found.jpg';
+
+            }
+
+            $Title = $request->Title;
+            $Body = $request->Body;
+            $Catagorie = $request->Catagorie;
+            $path = $filename;
+
+
+//        $post=Post::create([
+//            'Title'->$Title,
+//            'Body'->$Body,
+//            'user_id'->$user_id
+//        ]);
+
+
+            $Posts->Title = $Title;
+            $Posts->Body = $Body;
+            $Posts->save();
+            //dd($Media_id=$Posts->Media->pluck('id'));
+            $Media_id=$Posts->Media->pluck('id');
+            $Media_Update=Media::find($Media_id)->first();
+            $Media_Update->path = $path;
+            $Media_Update->save();
+
+            $Posts->Media()->sync($Media_Update->id);
+            $Posts->Catagorie()->sync($Catagorie);
+
+//        dd($media->id);
+
+
+//
+//        $postmedia=new PostMedia;
+//        $postmedia->post_id=$post->id;
+//        $postmedia->media_id=$media->id;
+//        $postmedia->save();
+//
+//        $postCatagorie= new PostCatagorie;
+//        $postCatagorie->post_id=$post->id;
+//        $postCatagorie->catagorie_id=$Catagorie;
+//        $postCatagorie->save();
+
+
+        return redirect('home')->with('status', 'Post Update ');
+
     }
+
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $delposts = Post::findOrFail($id);
+        $delposts->delete();
+        $Posts = Post::paginate(10);
+        return view('home', compact('Posts'))->with('Status', 'Post Delete Succefuly');
+
     }
 }
