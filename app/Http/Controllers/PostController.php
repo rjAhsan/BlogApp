@@ -119,11 +119,11 @@ class PostController extends Controller
     public function edit($id)
     {
         //dd($id);
-
-         if(Auth::user()->id === Post::find($id)->user_id)
+        $Posts = Post::find($id);
+         if(Auth::user()->id === $Posts->user_id)
          {
 
-        $Posts = Post::find($id);
+
         $catagories = Catagorie::all();
         return view('EditPost', compact('Posts', 'catagories'));
        }
@@ -145,7 +145,10 @@ class PostController extends Controller
      */
     public function update(PostForm $request, $id)
     {
+
         $Posts = Post::findOrFail($id);
+
+
         //dd($Posts);
 
 
@@ -212,14 +215,14 @@ class PostController extends Controller
      */
     public function destroy($id ,Post $post)
     {
+        $delposts = Post::findOrFail($id);
         //Appply ACL WITH IF_ELSE
 //        if(Auth::user()->id === Post::find($id)->user_id)
+            ///Applay ACL With GATES That Define in Authserviceprovider
+        //    if(Gate::allows('edit-post',$delposts))
 
-        $delposts = Post::findOrFail($id);
-//        dd($delposts);
-
-///Applay ACL With GATES
-         if(Gate::allows('edit-post',$delposts)){
+        if(Auth::user()->can('delete',$delposts))
+        {
             $delposts = Post::findOrFail($id);
             $delposts->delete();
             $Posts = Post::paginate(10);
