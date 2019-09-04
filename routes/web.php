@@ -2,6 +2,7 @@
 use App\Post;
 use App\Media;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,9 +18,10 @@ Route::get('/', function () {
 });
 
 
-Route::resource('/Post','PostController');
-Route::get('/Posts/{id}','PostController@destroy');
+Route::resource('/Post','PostController')->middleware('auth');
+
 Auth::routes(['verify'=>true]);
+
 Route::get('/home', 'HomeController@index')->name('home');
 //SOLIATE TO APP WITH GITHUB
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
@@ -39,8 +41,9 @@ Route::prefix('View')->group(function () {
 //Testing
 
 Route::get('/Testing', function () {
-//    $posts= Post::find($id);
-    dd("Print");
+    $posts= Post::find(27)->user_id;
+    dd($posts);
+    //dd(Auth::user()->id);
 
 });
 

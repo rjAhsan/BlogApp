@@ -30,6 +30,8 @@ class PostController extends Controller
      */
     public function create()
     {
+        $Catagories=Catagorie::all();
+        return view('createPost',compact('Catagories'));
 
     }
 
@@ -102,7 +104,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $Posts = Post::find($id)->first();
+        $Posts = Post::find($id);
 //        dd($Posts);
         return view('ShowPost', compact('Posts'));
     }
@@ -115,9 +117,22 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $Posts = Post::find($id)->first();
+        //dd($id);
+
+         if(Auth::user()->id === Post::find($id)->user_id)
+         {
+
+        $Posts = Post::find($id);
         $catagories = Catagorie::all();
         return view('EditPost', compact('Posts', 'catagories'));
+       }
+        else   {
+            return redirect('home')->with('status', 'You are Not Allowed');
+
+        }
+
+
+
     }
 
     /**
@@ -129,7 +144,7 @@ class PostController extends Controller
      */
     public function update(PostForm $request, $id)
     {
-        $Posts = Post::findOrFail($id)->first();
+        $Posts = Post::findOrFail($id);
         //dd($Posts);
 
 
@@ -196,10 +211,19 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $delposts = Post::findOrFail($id);
-        $delposts->delete();
-        $Posts = Post::paginate(10);
-        return view('home', compact('Posts'))->with('Status', 'Post Delete Succefuly');
+        if(Auth::user()->id === Post::find($id)->user_id){
+
+            $delposts = Post::findOrFail($id);
+            $delposts->delete();
+            $Posts = Post::paginate(10);
+//            return view('home', compact('Posts'))->with('Status', 'Post Delete Succefuly');
+            return redirect('home');
+        }
+        else{
+            return redirect('home')->with('status', 'You are Not Allowed');
+
+
+        }
 
     }
 }

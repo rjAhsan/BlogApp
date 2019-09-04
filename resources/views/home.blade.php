@@ -7,7 +7,7 @@
 
 
                 <div class="card-header"><h2>Welcome {{$user = Auth::user()->name}}</h2></div>
-                <a href="{{route('Post.Create.View')}}"><button class="btn btn-success"><span>CreatePost</span></button></a>
+                <a href="{{route('Post.create')}}"><button class="btn btn-success"><span>CreatePost</span></button></a>
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -26,6 +26,7 @@
                     <p>{{$Post->Body}}</p>
                     <a href="{{route('Post.show',$Post)}}"><button class="btn btn-success"><span>ReadMore</span></button></a>
                     <h5>{{$Post->created_at->diffForHumans()}}</h5>
+                   @if(Auth::user()->id===$Post->user->id)
                     <a href="{{route('Post.edit',$Post)}}"><button class="btn btn-primary"><span>Edit</span></button></a>
 
                     {{--<a href="{{url('Posts/'.$Post->id)}}"><button class="btn btn-danger"><span>Delete</span></button></a>--}}
@@ -40,9 +41,9 @@
                             @method('DELETE')
                             @csrf
                             <button class="btn btn-danger">Delete</button>
-                        </form>
-
-                        <hr>
+                     </form>
+                    @endif
+                    <hr>
                     <br>
                 @endforeach
                 @else

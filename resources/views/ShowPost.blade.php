@@ -12,13 +12,14 @@
                                <a href="{{ url()->previous() }}"> <button type="submit" class="btn btn-success">
                                     <span> Back</span>
                                    </button></a>
+                                @if(Auth::user()->id===$Posts->user_id)
                                 <form style="display: inline" action="{{ route('Post.destroy', $Posts->id) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button class="btn btn-danger">Delete</button>
                                 </form>
                                 <a href="{{route('Post.edit',$Posts)}}"><button class="btn btn-primary"><span>Edit</span></button></a>
-
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -35,7 +36,7 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Title</label>
 
                                 <div class="col-md-6">
-                                    <input id="Title" value={{$Posts->Title}} class="form-control"  name="Title">
+                                    <input id="Title"  class="form-control" readonly  name="Title" value="{{$Posts->Title}}">
 
                                 </div>
                             </div>
@@ -58,7 +59,7 @@
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">Article</label>
                                 <div class="col-md-6">
-                                   <textarea class="form-control" rows="10" cols="100" value= readonly name="Body" >
+                                   <textarea class="form-control" rows="10" cols="100" readonly name="Body" >
                                     {{$Posts->Body}}
                                    </textarea>
                                 </div>
