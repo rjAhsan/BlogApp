@@ -1,3 +1,31 @@
+<h4>Following things are used in project:</h4>
+<p>laravel 5.8</p>
+<p>Eloquent ORM </p>
+<p>Laravel-auth</p>
+<p>Laravel-Authrization</p>
+<p>Email-Verication</p>
+<p>Social-lite</p>
+<p>Pagination</p>
+<p>policies</p>
+<p>Guards</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
